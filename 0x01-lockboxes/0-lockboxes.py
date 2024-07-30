@@ -4,11 +4,11 @@
 
 def canUnlockAll(boxes):
     '''Determines if all the boxes can be opened or not.
-    
+
     Args:
         boxes (list of lists): A list where each element is a
         list of keys for each box.
-        
+
     Returns:
         bool: True if all boxes can be opened, False otherwise.
     '''
