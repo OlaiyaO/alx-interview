@@ -20,64 +20,69 @@ if __name__ == '__main__':
         exit(1)
 
     solutions = []
-    queens_positions = []
-    stop_search = False
-    row = 0
-    column = 0
+    placed_queens = []  # coordinates format [row, column]
+    stop = False
+    r = 0
+    c = 0
 
-
-    while row < n:
-        go_back = False
-        while column < n:
-            
-            is_safe = True
-            for coord in queens_positions:
-                col = coord[1]
-                if(col == column or col + (row - coord[0]) == column or
-                        col - (row - coord[0]) == column):
-                    is_safe = False
+    # iterate thru rows
+    while r < n:
+        goback = False
+        # iterate thru columns
+        while c < n:
+            # check is current column is safe
+            safe = True
+            for cord in placed_queens:
+                col = cord[1]
+                if(col == c or col + (r-cord[0]) == c or
+                        col - (r-cord[0]) == c):
+                    safe = False
                     break
 
-            if not is_safe:
-                if column == n - 1:
-                    go_back = True
+            if not safe:
+                if c == n - 1:
+                    goback = True
                     break
-                column += 1
+                c += 1
                 continue
 
-
-            coords = [row, column]
-            queens_positions.append(coords)
-            if row == n - 1:
-                solutions.append(queens_positions[:])
-                for coord in queens_positions:
-                    if coord[1] < n - 1:
-                        row = coord[0]
-                        column = coord[1]
-                for i in range(n - row):
-                    queens_positions.pop()
-                if row == n - 1 and column == n - 1:
-                    queens_positions = []
-                    stop_search = True
-                row -= 1
-                column += 1
+            # place queen
+            cords = [r, c]
+            placed_queens.append(cords)
+            # if last row, append solution and reset all to last unfinished row
+            # and last safe column in that row
+            if r == n - 1:
+                solutions.append(placed_queens[:])
+                for cord in placed_queens:
+                    if cord[1] < n - 1:
+                        r = cord[0]
+                        c = cord[1]
+                for i in range(n - r):
+                    placed_queens.pop()
+                if r == n - 1 and c == n - 1:
+                    placed_queens = []
+                    stop = True
+                r -= 1
+                c += 1
             else:
-                column = 0
+                c = 0
             break
-        if stop_search:
+        if stop:
             break
-        if go_back:
-            row -= 1
-            while row >= 0:
-                column = queens_positions[row][1] + 1
-                del queens_positions[row]
-                if column < n:
+        # on fail: go back to previous row
+        # and continue from last safe column + 1
+        if goback:
+            r -= 1
+            while r >= 0:
+                c = placed_queens[r][1] + 1
+                del placed_queens[r]  # delete previous queen coordinates
+                if c < n:
                     break
-                row -= 1
-            if row < 0:
+                r -= 1
+            if r < 0:
                 break
             continue
-        row += 1
+        r += 1
 
     for idx, val in enumerate(solutions):
         if idx == len(solutions) - 1:
